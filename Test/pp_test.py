@@ -7,7 +7,7 @@ from cv2 import resize
 
 if __name__ == "__main__":
     pattern_matrix, _ = read_image(location=r"images/test_images/pattern.jpg")
-    pattern_grayscale = color_to_gray(im_matrix=pattern_matrix)
+    pattern_grayscale = color_to_gray(image_matrix=pattern_matrix)
     pattern = resize(pattern_grayscale, (440, 440))
 
     pp = PointProcessing(r"images/test_images/lenna.png")
