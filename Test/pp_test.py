@@ -1,10 +1,9 @@
 import sys
 sys.path.insert(0, "E:\Projects\DIP")
-from cv2 import resize
-from numpy import ones
-from App.point_processing import *
 from App.utils import *
-
+from App.point_processing import *
+from numpy import ones
+from cv2 import resize
 
 if __name__ == "__main__":
     pattern_matrix, _ = read_image(location=r"images/test_images/pattern.jpg")
@@ -12,7 +11,7 @@ if __name__ == "__main__":
     pattern = resize(pattern_grayscale, (440, 440))
 
     pp = PointProcessing(r"images/test_images/lenna.png")
-    
+
     addition = pp.addition(pattern)
     write_image(addition, r"images/point_processing/addition.png")
     subtraction = pp.subtraction(pattern)
@@ -27,4 +26,12 @@ if __name__ == "__main__":
     write_image(negation, r"images/point_processing/negation.png")
     thresholding = pp.thresholding(128)
     write_image(thresholding, r"images/point_processing/thresholding.png")
-    
+    gray_level_slicing = pp.gray_level_slicing((100, 150), background=True)
+    write_image(gray_level_slicing,
+                r"images/point_processing/gray_level_slicing_bg.png")
+    gray_level_slicing = pp.gray_level_slicing((100, 150), background=False)
+    write_image(gray_level_slicing,
+                r"images/point_processing/gray_level_slicing_no_bg.png")
+    log_transform = pp.log_transform()                
+    write_image(log_transform,
+                r"images/point_processing/log_transform.png")

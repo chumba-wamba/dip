@@ -1,5 +1,5 @@
 from App.utils import *
-from numpy import shape, empty, uint8
+from numpy import shape, empty, uint8, log
 from typing import Optional, Tuple, List
 
 
@@ -85,7 +85,7 @@ class PointProcessing():
 
         return uint8(im_solution)
 
-    def negation(self):
+    def negation(self) -> List[List]:
         im_solution = empty([self.x, self.y])
         for i in range(self.x):
             for j in range(self.y):
@@ -94,7 +94,7 @@ class PointProcessing():
 
         return uint8(im_solution)
 
-    def thresholding(self, threshold: int):
+    def thresholding(self, threshold: int) -> List[List]:
         if threshold > 255 or threshold < 0:
             raise Exception("threshold must be of range(0, 255)")
 
@@ -104,6 +104,38 @@ class PointProcessing():
                 temp = 255
                 if self.im_one[i][j] < threshold:
                     temp = 0
+                im_solution[i][j] = temp
+
+        return uint8(im_solution)
+
+    def gray_level_slicing(self, slice_range: Tuple[int], background: Optional[bool] = False) -> List[List]:
+        if any(slice_range) > 255 or any(slice_range) < 0:
+            raise Exception("slice range must be of range(0, 255)")
+
+        if slice_range[0] > slice_range[1]:
+            raise Exception("slice range must be of type (min: int, max: int)")
+
+        im_solution = empty([self.x, self.y])
+        for i in range(self.x):
+            for j in range(self.y):
+                if self.im_one[i][j] >= slice_range[0] and self.im_one[i][j] <= slice_range[1]:
+                    temp = 255
+                else:
+                    temp = 0
+                    if background:
+                        temp = self.im_one[i][j]
+                im_solution[i][j] = temp
+
+        return uint8(im_solution)
+
+    def log_transform(self) -> List[List]:
+        max_pix = max([max(row) for row in self.im_one])
+        c = (255)/(log(1+max_pix))
+
+        im_solution = empty([self.x, self.y])
+        for i in range(self.x):
+            for j in range(self.y):
+                temp = int(c*log(1+self.im_one[i][j]))
                 im_solution[i][j] = temp
 
         return uint8(im_solution)
