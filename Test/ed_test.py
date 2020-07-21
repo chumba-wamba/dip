@@ -12,5 +12,9 @@ if __name__ == "__main__":
     sobel = ed.detect()
     write_image(sobel, r"images/edge_detection/sobel.png")
     prewitt = ed.detect("prewitt")
-    print(prewitt[0][0])
     write_image(prewitt, r"images/edge_detection/prewitt.png")
+
+    ed = EdgeDetection(r"images/neighbourhood_processing/low_pass.png")
+    laplacian = ed.detect("laplacian")
+    write_image(laplacian, r"images/edge_detection/laplacian.png")
+    

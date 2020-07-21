@@ -37,7 +37,12 @@ class EdgeDetection():
                     [0, 0, 0],
                     [-1, -1, -1]
                 ]
-            }
+            },
+            "laplacian": [
+                [0, -1, 0],
+                [-1, 4, -1],
+                [0, -1, 0]
+            ]
         }
 
     @staticmethod
@@ -60,5 +65,20 @@ class EdgeDetection():
         return uint8(solution_image)
 
     def detect(self, filter: Optional[str] = "sobel") -> List[List]:
-        mask_x, mask_y = self.masks[filter]["x"], self.masks[filter]["y"]
-        return self.convolution(self.image, mask_x, mask_y)
+        if filter != "laplacian":
+            mask_x, mask_y = self.masks[filter]["x"], self.masks[filter]["y"]
+            return self.convolution(self.image, mask_x, mask_y)
+
+        x, y = shape(self.image)[0], shape(self.image)[1]
+        solution_image = empty([x, y], dtype=uint8)
+
+        mask = self.masks["laplacian"]
+
+        padded_image = NeighbourhoodProcessing.pad_image(self.image)
+        for i in range(1, len(self.image)+1):
+            for j in range(1, len(self.image)+1):
+                temp = sum([sum(row) for row in multiply(
+                    padded_image[i-1:i+2, j-1:j+2], mask)])
+                solution_image[i-1][j-1] = int(temp)
+
+        return uint8(solution_image)
