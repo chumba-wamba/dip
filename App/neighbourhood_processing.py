@@ -40,7 +40,8 @@ class NeighbourhoodProcessing():
     def _pad_image(cls, image):
         return cls.pad_image(image)
 
-    def low_pass_filtering(self):
+    # Average Filtering
+    def low_pass_filtering(self) -> List[List]:
         low_pass_mask = [
             [1/9, 1/9, 1/9],
             [1/9, 1/9, 1/9],
@@ -50,17 +51,17 @@ class NeighbourhoodProcessing():
             image=self.image, filter=low_pass_mask)
         return low_pass_image
 
-    def high_pass_filtering(self):
-        low_pass_mask = [
+    def high_pass_filtering(self) -> List[List]:
+        high_pass_mask = [
             [-1/9, -1/9, -1/9],
             [-1/9, 8/9, -1/9],
             [-1/9, -1/9, -1/9]
         ]
-        low_pass_image = self.convolution(
-            image=self.image, filter=low_pass_mask)
-        return low_pass_image
+        high_pass_image = self.convolution(
+            image=self.image, filter=high_pass_mask)
+        return high_pass_image
 
-    def median_filtering(self):
+    def median_filtering(self) -> List[List]:
         x, y = shape(self.image)[0], shape(self.image)[1]
         low_pass_image = empty([x, y], dtype=uint8)
 
@@ -71,3 +72,9 @@ class NeighbourhoodProcessing():
                 low_pass_image[i-1][j-1] = int(temp)
 
         return uint8(low_pass_image)
+
+    def high_boost_filtering(self) -> List[List]:
+        pass
+
+    def gaussian_filtering(self) -> List[List]:
+        pass
